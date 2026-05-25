@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  FlatList,
   Modal,
-  TextInput,
   Alert,
-  KeyboardAvoidingView,
   Platform,
+  FlatList,
+  TextInput,
   ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { RootState } from '../store';
 import { addPlan, deletePlan, Plan } from '../store/plansSlice';
 import { schedulePlanReminder, cancelPlanReminder } from '../services/notificationService';
-import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../shared/layout/Header';
 
 export default function PlansScreen() {
   const plans = useSelector((state: RootState) => state.plans.plans);
@@ -58,18 +60,20 @@ export default function PlansScreen() {
     const planId = Math.random().toString(36).substring(2, 9);
 
     // 1. Dispatch to Redux Store
-    dispatch(addPlan({
-      id: planId,
-      title: title.trim(),
-      budget: budgetNum,
-      intervalHours: hours,
-    }));
+    dispatch(
+      addPlan({
+        id: planId,
+        title: title.trim(),
+        budget: budgetNum,
+        intervalHours: hours,
+      }),
+    );
 
     // 2. Schedule notification reminder
     await schedulePlanReminder(planId, title.trim(), hours);
 
     Alert.alert('Thành công', `Đã tạo kế hoạch "${title}" và hẹn giờ nhắc nhở!`);
-    
+
     // Reset state & close modal
     setTitle('');
     setBudget('');
@@ -91,14 +95,14 @@ export default function PlansScreen() {
             await cancelPlanReminder(planId);
           },
         },
-      ]
+      ],
     );
   };
 
   const renderPlanCard = ({ item }: { item: Plan }) => {
     const percent = item.budget > 0 ? (item.spent / item.budget) * 100 : 0;
     const remaining = item.budget - item.spent;
-    
+
     // Dynamic progress bar color
     let barColor = '#4caf50'; // Green
     if (percent >= 90) {
@@ -108,7 +112,9 @@ export default function PlansScreen() {
     }
 
     // Find interval label
-    const intervalObj = intervalOptions.find(opt => Math.abs(parseFloat(opt.value) - item.intervalHours) < 0.01);
+    const intervalObj = intervalOptions.find(
+      (opt) => Math.abs(parseFloat(opt.value) - item.intervalHours) < 0.01,
+    );
     const intervalLabel = intervalObj ? intervalObj.label : `${item.intervalHours} Giờ`;
 
     return (
@@ -116,50 +122,68 @@ export default function PlansScreen() {
         <View style={styles.cardHeader}>
           <View>
             <Text style={styles.cardTitle}>{item.title}</Text>
-            <Text style={styles.cardSub}>Nhắc nhở: {intervalLabel}</Text>
+            <Text style={styles.cardSub}>
+              {item.id === 'general' ? 'Thư mục chụp hình chung' : `Nhắc nhở: ${intervalLabel}`}
+            </Text>
           </View>
-          <TouchableOpacity onPress={() => handleDeletePlan(item.id, item.title)}>
-            <Ionicons name="trash-outline" size={22} color="#ff4444" />
-          </TouchableOpacity>
+          {item.id !== 'general' && (
+            <TouchableOpacity onPress={() => handleDeletePlan(item.id, item.title)}>
+              <Ionicons name="trash-outline" size={22} color="#ff4444" />
+            </TouchableOpacity>
+          )}
         </View>
 
-        <View style={styles.spendingRow}>
-          <Text style={styles.spendingText}>
-            Đã tiêu: <Text style={styles.spentAmount}>{formatVND(item.spent)}</Text>
-          </Text>
-          <Text style={styles.spendingText}>
-            Hạn mức: <Text style={styles.budgetAmount}>{formatVND(item.budget)}</Text>
-          </Text>
-        </View>
+        {item.id !== 'general' ? (
+          <>
+            <View style={styles.spendingRow}>
+              <Text style={styles.spendingText}>
+                Đã tiêu: <Text style={styles.spentAmount}>{formatVND(item.spent)}</Text>
+              </Text>
+              <Text style={styles.spendingText}>
+                Hạn mức: <Text style={styles.budgetAmount}>{formatVND(item.budget)}</Text>
+              </Text>
+            </View>
 
-        {/* Custom Progress Bar */}
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${Math.min(percent, 100)}%`, backgroundColor: barColor }]} />
-        </View>
+            {/* Custom Progress Bar */}
+            <View style={styles.progressContainer}>
+              <View
+                style={[
+                  styles.progressBar,
+                  { width: `${Math.min(percent, 100)}%`, backgroundColor: barColor },
+                ]}
+              />
+            </View>
 
-        <View style={styles.cardFooter}>
-          <Text style={[styles.remainingText, { color: remaining < 0 ? '#ff4444' : '#aaa' }]}>
-            {remaining < 0 ? `Vượt hạn mức: ${formatVND(Math.abs(remaining))}` : `Còn lại: ${formatVND(remaining)}`}
-          </Text>
-        </View>
+            <View style={styles.cardFooter}>
+              <Text style={[styles.remainingText, { color: remaining < 0 ? '#ff4444' : '#aaa' }]}>
+                {remaining < 0
+                  ? `Vượt hạn mức: ${formatVND(Math.abs(remaining))}`
+                  : `Còn lại: ${formatVND(remaining)}`}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.spendingRow}>
+            <Text style={styles.spendingText}>
+              Đã tiêu: <Text style={styles.spentAmount}>{formatVND(item.spent)}</Text>
+            </Text>
+          </View>
+        )}
       </View>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Kế Hoạch</Text>
-        <TouchableOpacity style={styles.addBtn} onPress={() => setModalVisible(true)}>
-          <Ionicons name="add" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      <Header title="Kế Hoạch" rightIcon="add" onRightPress={() => setModalVisible(true)} />
 
       {plans.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="calendar-outline" size={80} color="#333" />
           <Text style={styles.emptyText}>Chưa có kế hoạch chi tiêu nào.</Text>
-          <Text style={styles.emptySubText}>Tạo kế hoạch để bắt đầu check-in chi tiêu theo giờ!</Text>
+          <Text style={styles.emptySubText}>
+            Tạo kế hoạch để bắt đầu check-in chi tiêu theo giờ!
+          </Text>
           <TouchableOpacity style={styles.createFirstBtn} onPress={() => setModalVisible(true)}>
             <Text style={styles.createFirstBtnText}>Tạo Kế Hoạch Đầu Tiên</Text>
           </TouchableOpacity>
@@ -186,12 +210,12 @@ export default function PlansScreen() {
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Tạo Kế Hoạch Mới</Text>
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Ionicons name="close" size={24} color="#fff" />
-              </TouchableOpacity>
-            </View>
+            <Header
+              title="Tạo Kế Hoạch Mới"
+              type="modal"
+              rightIcon="close"
+              onRightPress={() => setModalVisible(false)}
+            />
 
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.label}>Tên Kế Hoạch</Text>

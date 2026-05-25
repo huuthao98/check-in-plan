@@ -15,7 +15,17 @@ interface PlansState {
 }
 
 const initialState: PlansState = {
-  plans: [],
+  plans: [
+    {
+      id: 'general',
+      title: 'Chung',
+      budget: 0,
+      spent: 0,
+      intervalHours: 0,
+      createdAt: new Date().toISOString(),
+      isActive: true,
+    },
+  ],
 };
 
 const plansSlice = createSlice({
@@ -40,6 +50,18 @@ const plansSlice = createSlice({
     },
     deletePlan: (state, action: PayloadAction<string>) => {
       state.plans = state.plans.filter(p => p.id !== action.payload);
+      const hasGeneral = state.plans.some(p => p.id === 'general');
+      if (!hasGeneral) {
+        state.plans.unshift({
+          id: 'general',
+          title: 'Chung',
+          budget: 0,
+          spent: 0,
+          intervalHours: 0,
+          createdAt: new Date().toISOString(),
+          isActive: true,
+        });
+      }
     },
     togglePlanActive: (state, action: PayloadAction<string>) => {
       const plan = state.plans.find(p => p.id === action.payload);
@@ -48,7 +70,24 @@ const plansSlice = createSlice({
       }
     },
     hydratePlans: (state, action: PayloadAction<Plan[]>) => {
-      state.plans = action.payload;
+      const plans = action.payload || [];
+      const hasGeneral = plans.some(p => p.id === 'general');
+      if (!hasGeneral) {
+        state.plans = [
+          {
+            id: 'general',
+            title: 'Chung',
+            budget: 0,
+            spent: 0,
+            intervalHours: 0,
+            createdAt: new Date().toISOString(),
+            isActive: true,
+          },
+          ...plans,
+        ];
+      } else {
+        state.plans = plans;
+      }
     }
   },
 });
