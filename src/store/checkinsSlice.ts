@@ -1,15 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CheckIn } from '../shared/types';
 
-export interface CheckIn {
-  id: string;
-  planId: string;
-  photoUri: string | null;
-  amountSpent: number;
-  notes: string;
-  timestamp: string;
-  status: 'completed' | 'skipped' | 'pending';
-  visibility: 'public' | 'private' | 'friends';
-}
 
 interface CheckInsState {
   CheckIns: CheckIn[];
@@ -88,11 +79,11 @@ const CheckInsSlice = createSlice({
 
 export const {
   addCheckIn,
-  addPendingCheckIn,
   skipCheckIn,
-  completePendingCheckIn,
   deleteCheckIn,
   hydrateCheckIns,
+  addPendingCheckIn,
+  completePendingCheckIn,
 } = CheckInsSlice.actions;
 
 export default CheckInsSlice.reducer;

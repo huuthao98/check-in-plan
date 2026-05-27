@@ -5,28 +5,25 @@ import {
   Modal,
   Alert,
   FlatList,
-  StyleSheet,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 import * as Notifications from 'expo-notifications';
+import * as ImagePicker from 'expo-image-picker';
+
 import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
-import { RootState } from '../store';
-import { addPendingCheckIn, skipCheckIn } from '../store/checkInsSlice';
-import { CheckIn } from '../shared/types';
-import { logout } from '../store/authSlice';
-import { setAuthToken } from '../services/api';
-import Header from '../shared/layout/Header';
-
-const { width } = Dimensions.get('window');
-const SQUARE_SIZE = width - 40;
+import { RootState } from '@/store';
+import { addPendingCheckIn, skipCheckIn } from '@/store/checkInsSlice';
+import { CheckIn } from '@/shared/types';
+import { logout } from '@/store/authSlice';
+import { setAuthToken } from '@/services/api';
+import Header from '@/shared/layout/Header';
+import { styles } from './styles';
 
 export default function HomeScreen({ navigation }: any) {
   const [facing, setFacing] = useState<'back' | 'front'>('back');
@@ -204,19 +201,19 @@ export default function HomeScreen({ navigation }: any) {
       <View style={styles.topBar}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.logoText}>CheckIn Plan</Text>
-          <TouchableOpacity
-            style={{ marginLeft: 15, padding: 5 }}
+          <TouchableOpacity 
+            style={{ marginLeft: 15, padding: 5 }} 
             onPress={() => {
               Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất không?', [
                 { text: 'Hủy', style: 'cancel' },
-                {
-                  text: 'Đăng xuất',
-                  style: 'destructive',
+                { 
+                  text: 'Đăng xuất', 
+                  style: 'destructive', 
                   onPress: () => {
                     dispatch(logout());
                     setAuthToken(null);
-                  },
-                },
+                  } 
+                }
               ]);
             }}
           >
@@ -348,323 +345,3 @@ export default function HomeScreen({ navigation }: any) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0c0f14',
-    justifyContent: 'space-between',
-  },
-  darkContainer: {
-    flex: 1,
-    backgroundColor: '#0c0f14',
-  },
-  permissionText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 24,
-    paddingHorizontal: 40,
-    lineHeight: 22,
-  },
-  button: {
-    backgroundColor: '#ff9f43',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 25,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 15,
-    height: 60,
-  },
-  logoText: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  makeupBadgeBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ff4d4d',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  makeupBadgeBtnText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginLeft: 6,
-  },
-  makeupIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ff9f43',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginHorizontal: 20,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-  makeupIndicatorText: {
-    color: '#000',
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 13,
-  },
-  makeupCancelBtn: {
-    padding: 2,
-  },
-  planSelectorBanner: {
-    paddingHorizontal: 20,
-  },
-  selectorLabel: {
-    color: '#666',
-    fontSize: 11,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    marginBottom: 6,
-  },
-  planSelectorScroll: {
-    paddingBottom: 4,
-  },
-  planSelectorChip: {
-    backgroundColor: '#1b1f28',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 18,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-  },
-  planSelectorChipActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
-  },
-  planSelectorChipText: {
-    color: '#888',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  planSelectorChipTextActive: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  cameraContainer: {
-    width: SQUARE_SIZE,
-    height: SQUARE_SIZE,
-    borderRadius: 36,
-    overflow: 'hidden',
-    alignSelf: 'center',
-    backgroundColor: '#1b1f28',
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
-    elevation: 10,
-    marginVertical: 15,
-  },
-  camera: {
-    flex: 1,
-  },
-  CheckInBorder: {
-    flex: 1,
-    borderWidth: 3,
-    borderColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 36,
-  },
-  noPlansCameraOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30,
-  },
-  noPlansCameraText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 15,
-  },
-  noPlansCameraSub: {
-    color: '#666',
-    fontSize: 13,
-    textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 18,
-  },
-  controlsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-    paddingBottom: 40,
-  },
-  captureBtn: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    borderWidth: 5,
-    borderColor: '#ff9f43',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  captureInner: {
-    width: 66,
-    height: 66,
-    borderRadius: 33,
-    backgroundColor: '#fff',
-  },
-  controlSubBtn: {
-    alignItems: 'center',
-    width: 60,
-  },
-  controlSubText: {
-    color: '#888',
-    fontSize: 11,
-    marginTop: 6,
-    fontWeight: '600',
-  },
-  previewContainer: {
-    width: SQUARE_SIZE,
-    height: SQUARE_SIZE,
-    borderRadius: 36,
-    overflow: 'hidden',
-    alignSelf: 'center',
-    backgroundColor: '#000',
-    position: 'relative',
-    marginVertical: 40,
-  },
-  preview: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  makeupBadgeOverlay: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    backgroundColor: '#ff9f43',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  makeupBadgeText: {
-    color: '#000',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  actionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingBottom: 40,
-    paddingHorizontal: 20,
-  },
-  actionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    backgroundColor: '#2d323f',
-    justifyContent: 'center',
-    width: '45%',
-  },
-  actionText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginLeft: 8,
-  },
-  // Modal layout
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: '#1b1f28',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 24,
-    maxHeight: '60%',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  makeupList: {
-    paddingBottom: 20,
-  },
-  makeupItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#2d323f',
-    padding: 16,
-    borderRadius: 14,
-    marginBottom: 10,
-  },
-  makeupItemInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  makeupItemTextCol: {
-    marginLeft: 12,
-  },
-  makeupItemTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  makeupItemSub: {
-    color: '#888',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  makeupStartBtn: {
-    backgroundColor: '#ff9f43',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 12,
-  },
-  makeupStartBtnText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-  emptyMakeupText: {
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
-    fontSize: 14,
-  },
-});

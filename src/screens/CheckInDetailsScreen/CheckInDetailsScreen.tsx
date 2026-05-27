@@ -6,7 +6,6 @@ import {
   Platform,
   TextInput,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
@@ -15,10 +14,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Header from '../shared/layout/Header';
-import { RootState } from '../store';
-import { updatePlanSpent } from '../store/plansSlice';
-import { addCheckIn, completePendingCheckIn } from '../store/checkinsSlice';
+import Header from '@/shared/layout/Header';
+import { RootState } from '@/store';
+import { updatePlanSpent } from '@/store/plansSlice';
+import { addCheckIn, completePendingCheckIn } from '@/store/checkInsSlice';
+import { styles } from './styles';
 
 export default function CheckInDetailsScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
@@ -174,7 +174,6 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
                 style={styles.noPlansWarning}
                 onPress={() => {
                   navigation.goBack();
-                  // Ideally navigate to Plans tab, we can handle it
                 }}
               >
                 <Ionicons name="warning-outline" size={20} color="#ff9f43" />
@@ -281,209 +280,3 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0c0f14',
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  scrollContent: {
-    padding: 20,
-  },
-  polaroidContainer: {
-    alignSelf: 'center',
-    width: '75%',
-    aspectRatio: 1,
-    backgroundColor: '#1b1f28',
-    borderRadius: 24,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    marginBottom: 24,
-  },
-  photoPreview: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 16,
-    resizeMode: 'cover',
-  },
-  noPhotoPlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noPhotoText: {
-    color: '#666',
-    marginTop: 8,
-    fontWeight: '600',
-  },
-  inputSection: {
-    marginBottom: 24,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#aaa',
-    marginBottom: 10,
-  },
-  amountInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1b1f28',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    paddingHorizontal: 16,
-  },
-  amountInput: {
-    flex: 1,
-    height: 56,
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  currencyText: {
-    color: '#ff9f43',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  notesInput: {
-    backgroundColor: '#1b1f28',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    padding: 16,
-    color: '#fff',
-    fontSize: 16,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  planSelector: {
-    flexDirection: 'row',
-  },
-  planChip: {
-    backgroundColor: '#1b1f28',
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-  },
-  planChipActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
-  },
-  planChipText: {
-    color: '#aaa',
-    fontWeight: '600',
-  },
-  planChipTextActive: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  lockedPlan: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1b1f28',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    padding: 16,
-  },
-  lockedPlanText: {
-    color: '#666',
-    marginLeft: 8,
-    fontWeight: '600',
-  },
-  noPlansWarning: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 159, 67, 0.1)',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 159, 67, 0.3)',
-    padding: 16,
-  },
-  noPlansWarningText: {
-    color: '#ff9f43',
-    marginLeft: 8,
-    fontWeight: '600',
-  },
-  visibilityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  visibilityChip: {
-    flex: 1,
-    backgroundColor: '#1b1f28',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 4,
-    borderWidth: 1,
-    borderColor: '#2d323f',
-    flexDirection: 'row',
-  },
-  visibilityActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
-  },
-  visibilityText: {
-    fontSize: 10,
-    color: '#888',
-    marginLeft: 6,
-    fontWeight: '600',
-  },
-  visibilityTextActive: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  saveBtn: {
-    backgroundColor: '#ff9f43',
-    borderRadius: 16,
-    paddingVertical: 18,
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 40,
-    shadowColor: '#ff9f43',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  saveBtnText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});

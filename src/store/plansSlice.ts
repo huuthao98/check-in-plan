@@ -1,14 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Plan } from '../shared/types';
 
-export interface Plan {
-  id: string;
-  title: string;
-  budget: number;
-  spent: number;
-  intervalHours: number;
-  createdAt: string;
-  isActive: boolean;
-}
 
 interface PlansState {
   plans: Plan[];

@@ -3,11 +3,14 @@ import { ActivityIndicator, View, StyleSheet, Text, StatusBar } from 'react-nati
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 import { hydratePlans } from './src/store/plansSlice';
-import { hydrateCheckIns } from './src/store/checkinsSlice';
+import { hydrateCheckIns } from './src/store/checkInsSlice';
+import { hydrateAuth } from './src/store/authSlice';
+import { setAuthToken } from './src/services/api';
 import AppNavigator from './src/navigation/AppNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestNotificationPermissions } from './src/services/notificationService';
+import { STORAGE_KEYS } from './src/shared/constants';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -18,15 +21,24 @@ export default function App() {
         // 1. Request notification permissions
         await requestNotificationPermissions();
 
-        // 2. Load stored plans and CheckIns from AsyncStorage
-        const storedPlans = await AsyncStorage.getItem('locket_plans');
-        const storedCheckIns = await AsyncStorage.getItem('locket_CheckIns');
+        // 2. Load stored plans, CheckIns, and Auth from AsyncStorage
+        const storedPlans = await AsyncStorage.getItem(STORAGE_KEYS.PLANS);
+        const storedCheckIns = await AsyncStorage.getItem(STORAGE_KEYS.CHECKINS);
+        const storedToken = await AsyncStorage.getItem(STORAGE_KEYS.TOKEN);
+        const storedUser = await AsyncStorage.getItem(STORAGE_KEYS.USER);
 
         if (storedPlans) {
           store.dispatch(hydratePlans(JSON.parse(storedPlans)));
         }
         if (storedCheckIns) {
           store.dispatch(hydrateCheckIns(JSON.parse(storedCheckIns)));
+        }
+        if (storedToken && storedUser) {
+          setAuthToken(storedToken);
+          store.dispatch(hydrateAuth({
+            token: storedToken,
+            user: JSON.parse(storedUser)
+          }));
         }
       } catch (e) {
         console.warn('Error loading persisted state:', e);

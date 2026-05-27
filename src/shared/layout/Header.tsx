@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ReactNode } from 'react';
+import { colors } from '../theme/colors';
 
 interface HeaderProps {
   title?: string;
@@ -42,7 +43,7 @@ export default function Header({
       {showLeft ? (
         leftElement || (
           <TouchableOpacity style={styles.iconBtn} onPress={onLeftPress}>
-            <Ionicons name={leftIcon} size={24} color="#fff" />
+            <Ionicons name={leftIcon} size={24} color={colors.textLight} />
           </TouchableOpacity>
         )
       ) : finalAlign === 'center' && showRight ? (
@@ -67,7 +68,7 @@ export default function Header({
             style={rightIcon === 'add' ? styles.addBtn : styles.iconBtn}
             onPress={onRightPress}
           >
-            <Ionicons name={rightIcon} size={24} color="#fff" />
+            <Ionicons name={rightIcon} size={24} color={colors.textLight} />
           </TouchableOpacity>
         )
       ) : finalAlign === 'center' && showLeft ? (
@@ -85,13 +86,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
+    borderBottomColor: colors.border,
     minHeight: 65,
   },
   screenTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.textLight,
   },
   centerTitle: {
     textAlign: 'center',
@@ -106,13 +107,13 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.textLight,
   },
   addBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
