@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import plansReducer from './plansSlice';
 import CheckInsReducer from './checkInsSlice';
 import authReducer from './authSlice';
+import themeReducer from './themeSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from '../shared/constants';
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     plans: plansReducer,
     CheckIns: CheckInsReducer,
     auth: authReducer,
+    theme: themeReducer,
   },
 });
 
@@ -19,6 +21,7 @@ store.subscribe(async () => {
     const state = store.getState();
     await AsyncStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans.plans));
     await AsyncStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(state.CheckIns.CheckIns));
+    await AsyncStorage.setItem(STORAGE_KEYS.THEME, state.theme.themeMode);
     
     if (state.auth.token) {
       await AsyncStorage.setItem(STORAGE_KEYS.TOKEN, state.auth.token);

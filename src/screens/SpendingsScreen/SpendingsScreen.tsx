@@ -15,9 +15,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootState } from '@/store';
 import Header from '@/shared/layout/Header';
 import { CheckIn } from '@/shared/types';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
 
 export default function SpendingsScreen() {
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
   const CheckIns = useSelector((state: RootState) => state.CheckIns.CheckIns);
   const plans = useSelector((state: RootState) => state.plans.plans);
 
@@ -63,7 +66,7 @@ export default function SpendingsScreen() {
             <Image source={{ uri: item.photoUri }} style={styles.itemPhoto} />
           ) : (
             <View style={styles.itemPhotoPlaceholder}>
-              <Ionicons name="cash-outline" size={32} color="#444" />
+              <Ionicons name="cash-outline" size={32} color={colors.textMuted} />
             </View>
           )}
 
@@ -128,7 +131,7 @@ export default function SpendingsScreen() {
       {/* Spendings Grid */}
       {completedCheckIns.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="images-outline" size={80} color="#333" />
+          <Ionicons name="images-outline" size={80} color={colors.textMuted} />
           <Text style={styles.emptyText}>Chưa có ảnh chi tiêu.</Text>
           <Text style={styles.emptySubText}>
             Hình ảnh check-in chi tiêu của bạn sẽ hiển thị ở đây theo dạng Locket feed.
@@ -168,7 +171,7 @@ export default function SpendingsScreen() {
                             : 'lock-closed'
                       }
                       size={16}
-                      color="#ff9f43"
+                      color={colors.primary}
                     />
                     <Text style={styles.modalMetaText}>
                       {selectedCheckIn.visibility === 'public'
@@ -188,7 +191,7 @@ export default function SpendingsScreen() {
                   <Image source={{ uri: selectedCheckIn.photoUri }} style={styles.modalPhoto} />
                 ) : (
                   <View style={styles.modalPhotoPlaceholder}>
-                    <Ionicons name="image-outline" size={64} color="#333" />
+                    <Ionicons name="image-outline" size={64} color={colors.textMuted} />
                   </View>
                 )}
 

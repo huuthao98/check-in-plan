@@ -20,9 +20,12 @@ import { addPlan, deletePlan } from '@/store/plansSlice';
 import { Plan } from '@/shared/types';
 import { schedulePlanReminder, cancelPlanReminder } from '@/services/notificationService';
 import Header from '@/shared/layout/Header';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
 
 export default function PlansScreen() {
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
   const plans = useSelector((state: RootState) => state.plans.plans);
   const dispatch = useDispatch();
 
@@ -105,11 +108,11 @@ export default function PlansScreen() {
     const remaining = item.budget - item.spent;
 
     // Dynamic progress bar color
-    let barColor = '#4caf50'; // Green
+    let barColor = colors.success; // Green
     if (percent >= 90) {
-      barColor = '#f44336'; // Red
+      barColor = colors.error; // Red
     } else if (percent >= 70) {
-      barColor = '#ff9800'; // Orange
+      barColor = colors.warning; // Orange
     }
 
     // Find interval label
@@ -129,7 +132,7 @@ export default function PlansScreen() {
           </View>
           {item.id !== 'general' && (
             <TouchableOpacity onPress={() => handleDeletePlan(item.id, item.title)}>
-              <Ionicons name="trash-outline" size={22} color="#ff4444" />
+              <Ionicons name="trash-outline" size={22} color={colors.textRed} />
             </TouchableOpacity>
           )}
         </View>
@@ -156,7 +159,7 @@ export default function PlansScreen() {
             </View>
 
             <View style={styles.cardFooter}>
-              <Text style={[styles.remainingText, { color: remaining < 0 ? '#ff4444' : '#aaa' }]}>
+              <Text style={[styles.remainingText, { color: remaining < 0 ? colors.textRed : colors.textSecondary }]}>
                 {remaining < 0
                   ? `Vượt hạn mức: ${formatVND(Math.abs(remaining))}`
                   : `Còn lại: ${formatVND(remaining)}`}
@@ -180,7 +183,7 @@ export default function PlansScreen() {
 
       {plans.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="calendar-outline" size={80} color="#333" />
+          <Ionicons name="calendar-outline" size={80} color={colors.textMuted} />
           <Text style={styles.emptyText}>Chưa có kế hoạch chi tiêu nào.</Text>
           <Text style={styles.emptySubText}>
             Tạo kế hoạch để bắt đầu check-in chi tiêu theo giờ!
@@ -223,7 +226,7 @@ export default function PlansScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Ví dụ: Ăn uống, Trà sữa, Mua sắm..."
-                placeholderTextColor="#666"
+                placeholderTextColor={colors.textMuted}
                 value={title}
                 onChangeText={setTitle}
               />
@@ -232,7 +235,7 @@ export default function PlansScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Ví dụ: 1.000.000"
-                placeholderTextColor="#666"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={budget}
                 onChangeText={(text) => {

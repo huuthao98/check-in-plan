@@ -24,11 +24,16 @@ import { CheckIn } from '../shared/types';
 import { logout } from '../store/authSlice';
 import { setAuthToken } from '../services/api';
 import Header from '../shared/layout/Header';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
+import { ThemeColors } from '@/shared/theme/colors';
 
 const { width } = Dimensions.get('window');
 const SQUARE_SIZE = width - 40;
 
 export default function HomeScreen({ navigation }: any) {
+  const { colors, themeMode, setThemeMode } = useTheme();
+  const styles = useStyles(createStyles);
+
   const [facing, setFacing] = useState<'back' | 'front'>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState<any>(null);
@@ -198,14 +203,34 @@ export default function HomeScreen({ navigation }: any) {
 
   const selectedPlan = plans.find((p) => p.id === activePlanId);
 
+  const toggleTheme = () => {
+    if (themeMode === 'dark') {
+      setThemeMode('light');
+    } else if (themeMode === 'light') {
+      setThemeMode('system');
+    } else {
+      setThemeMode('dark');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Top Bar with CheckIn Branding, Logout & Makeup Button */}
+      {/* Top Bar with CheckIn Branding, Logout & Theme Toggle & Makeup Button */}
       <View style={styles.topBar}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.logoText}>CheckIn Plan</Text>
           <TouchableOpacity
-            style={{ marginLeft: 15, padding: 5 }}
+            style={{ marginLeft: 12, padding: 5 }}
+            onPress={toggleTheme}
+          >
+            <Ionicons 
+              name={themeMode === 'light' ? 'sunny-outline' : themeMode === 'dark' ? 'moon-outline' : 'desktop-outline'} 
+              size={22} 
+              color={colors.primary} 
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginLeft: 12, padding: 5 }}
             onPress={() => {
               Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất không?', [
                 { text: 'Hủy', style: 'cancel' },
@@ -349,18 +374,18 @@ export default function HomeScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0f14',
+    backgroundColor: colors.background,
     justifyContent: 'space-between',
   },
   darkContainer: {
     flex: 1,
-    backgroundColor: '#0c0f14',
+    backgroundColor: '#0c0f14', // camera fallback container can remain dark
   },
   permissionText: {
-    color: '#fff',
+    color: colors.text,
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 24,
@@ -368,13 +393,13 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   button: {
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 25,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -387,7 +412,7 @@ const styles = StyleSheet.create({
     height: 60,
   },
   logoText: {
-    color: '#fff',
+    color: colors.text,
     fontSize: 22,
     fontWeight: 'bold',
   },
@@ -408,7 +433,7 @@ const styles = StyleSheet.create({
   makeupIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginHorizontal: 20,
@@ -428,7 +453,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   selectorLabel: {
-    color: '#666',
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -438,25 +463,25 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   planSelectorChip: {
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 18,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
   },
   planSelectorChipActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   planSelectorChipText: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 13,
     fontWeight: '600',
   },
   planSelectorChipTextActive: {
-    color: '#fff',
+    color: colors.textLight,
     fontWeight: 'bold',
   },
   cameraContainer: {
@@ -465,12 +490,12 @@ const styles = StyleSheet.create({
     borderRadius: 36,
     overflow: 'hidden',
     alignSelf: 'center',
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.5,
+    shadowOpacity: colors.background === '#0c0f14' ? 0.5 : 0.1,
     shadowRadius: 15,
     elevation: 10,
     marginVertical: 15,
@@ -491,13 +516,13 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   noPlansCameraText: {
-    color: '#fff',
+    color: colors.text,
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 15,
   },
   noPlansCameraSub: {
-    color: '#666',
+    color: colors.textMuted,
     fontSize: 13,
     textAlign: 'center',
     marginTop: 8,
@@ -515,7 +540,7 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 42,
     borderWidth: 5,
-    borderColor: '#ff9f43',
+    borderColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
@@ -531,7 +556,7 @@ const styles = StyleSheet.create({
     width: 60,
   },
   controlSubText: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 11,
     marginTop: 6,
     fontWeight: '600',
@@ -554,7 +579,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     left: 16,
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -568,12 +593,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   actionRow: {
     flexDirection: 'row',
@@ -587,14 +612,14 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.inputBackground,
     justifyContent: 'center',
     width: '45%',
   },
   actionText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
     marginLeft: 8,
   },
   // Modal layout
@@ -604,7 +629,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
@@ -619,7 +644,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   makeupList: {
     paddingBottom: 20,
@@ -628,7 +653,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.inputBackground,
     padding: 16,
     borderRadius: 14,
     marginBottom: 10,
@@ -641,28 +666,28 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   makeupItemTitle: {
-    color: '#fff',
+    color: colors.text,
     fontWeight: 'bold',
     fontSize: 15,
   },
   makeupItemSub: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 12,
     marginTop: 2,
   },
   makeupStartBtn: {
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 12,
   },
   makeupStartBtnText: {
-    color: '#fff',
+    color: colors.textLight,
     fontWeight: 'bold',
     fontSize: 13,
   },
   emptyMakeupText: {
-    color: '#666',
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 20,
     fontSize: 14,

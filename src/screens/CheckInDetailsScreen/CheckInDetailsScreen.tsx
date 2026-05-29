@@ -18,12 +18,15 @@ import Header from '@/shared/layout/Header';
 import { RootState } from '@/store';
 import { updatePlanSpent } from '@/store/plansSlice';
 import { addCheckIn, completePendingCheckIn } from '@/store/checkInsSlice';
-import { styles } from './styles';
+import { createStyles } from './styles';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
 
 export default function CheckInDetailsScreen({ route, navigation }: any) {
   const dispatch = useDispatch();
   const plans = useSelector((state: RootState) => state.plans.plans);
   const CheckIns = useSelector((state: RootState) => state.CheckIns.CheckIns);
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
 
   const { photo, pendingCheckInId } = route.params || {};
 
@@ -116,7 +119,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
               <Image source={{ uri: photo.uri }} style={styles.photoPreview} />
             ) : (
               <View style={styles.noPhotoPlaceholder}>
-                <Ionicons name="image-outline" size={48} color="#444" />
+                <Ionicons name="image-outline" size={48} color={colors.textMuted} />
                 <Text style={styles.noPhotoText}>Không có ảnh</Text>
               </View>
             )}
@@ -129,7 +132,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
               <TextInput
                 style={styles.amountInput}
                 placeholder="0"
-                placeholderTextColor="#666"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={amount}
                 onChangeText={(text) => {
@@ -151,7 +154,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
             <TextInput
               style={styles.notesInput}
               placeholder="Bạn đã chi cho việc gì? (Ví dụ: Ăn trưa, trà đào...)"
-              placeholderTextColor="#666"
+              placeholderTextColor={colors.textMuted}
               value={notes}
               onChangeText={setNotes}
               multiline
@@ -164,7 +167,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
             {pendingCheckInId ? (
               // If makeup, plan is locked
               <View style={styles.lockedPlan}>
-                <Ionicons name="lock-closed" size={16} color="#666" />
+                <Ionicons name="lock-closed" size={16} color={colors.textMuted} />
                 <Text style={styles.lockedPlanText}>
                   {selectedPlan ? selectedPlan.title : 'Kế hoạch đã chọn'} (Bắt buộc khi chụp bù)
                 </Text>
@@ -176,7 +179,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
                   navigation.goBack();
                 }}
               >
-                <Ionicons name="warning-outline" size={20} color="#ff9f43" />
+                <Ionicons name="warning-outline" size={20} color={colors.primary} />
                 <Text style={styles.noPlansWarningText}>
                   Bạn chưa có kế hoạch nào. Nhấn để tạo trước.
                 </Text>
@@ -219,7 +222,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
                 <Ionicons
                   name="people"
                   size={18}
-                  color={visibility === 'public' ? '#fff' : '#666'}
+                  color={visibility === 'public' ? colors.textLight : colors.textMuted}
                 />
                 <Text
                   style={[
@@ -238,7 +241,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
                 <Ionicons
                   name="star"
                   size={18}
-                  color={visibility === 'friends' ? '#fff' : '#666'}
+                  color={visibility === 'friends' ? colors.textLight : colors.textMuted}
                 />
                 <Text
                   style={[
@@ -257,7 +260,7 @@ export default function CheckInDetailsScreen({ route, navigation }: any) {
                 <Ionicons
                   name="lock-closed"
                   size={18}
-                  color={visibility === 'private' ? '#fff' : '#666'}
+                  color={visibility === 'private' ? colors.textLight : colors.textMuted}
                 />
                 <Text
                   style={[

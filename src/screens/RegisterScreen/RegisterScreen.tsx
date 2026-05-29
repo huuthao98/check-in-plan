@@ -1,29 +1,34 @@
-import { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
-  KeyboardAvoidingView,
+  Alert,
   Platform,
   ScrollView,
+  TouchableOpacity,
   ActivityIndicator,
-  Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
+import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { authStart, authSuccess, authFailure, clearError } from '@/store/authSlice';
-import { authAPI, setAuthToken } from '@/services/api';
-import { TextField, TextFieldPassword } from '@/shared/components/TextField';
-import { useAppDispatch } from '@/hooks/store';
+import { createStyles } from './styles';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
 import { useAuth } from '@/hooks/useAuth';
-import { styles } from './styles';
+import { useAppDispatch } from '@/hooks/store';
+import { authStart, authSuccess, authFailure, clearError } from '@/store/authSlice';
+
+import { authAPI, setAuthToken } from '@/services/api';
+import { TabSelector } from '@/shared/components/TabSelector';
+import { TextField, TextFieldPassword } from '@/shared/components/TextField';
 
 export default function RegisterScreen() {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAuth();
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
 
   const [registerMethod, setRegisterMethod] = useState<'email' | 'phone'>('email');
 
@@ -155,27 +160,19 @@ export default function RegisterScreen() {
             style={styles.headerContainer}
           >
             <Text style={styles.logoText}>Tạo Tài Khoản</Text>
-            <Text style={styles.subtext}>Đăng ký trải nghiệm Locket Plan ngay</Text>
+            <Text style={styles.subtext}>Đăng ký trải nghiệm Check In Plan ngay</Text>
           </Animated.View>
 
           {/* Tab Switcher */}
-          <Animated.View entering={FadeInUp.delay(200).duration(500)} style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[styles.tabButton, registerMethod === 'email' && styles.activeTabButton]}
-              onPress={() => setRegisterMethod('email')}
-            >
-              <Text style={[styles.tabText, registerMethod === 'email' && styles.activeTabText]}>
-                Đăng ký Email
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tabButton, registerMethod === 'phone' && styles.activeTabButton]}
-              onPress={() => setRegisterMethod('phone')}
-            >
-              <Text style={[styles.tabText, registerMethod === 'phone' && styles.activeTabText]}>
-                Đăng ký SĐT
-              </Text>
-            </TouchableOpacity>
+          <Animated.View entering={FadeInUp.delay(200).duration(500)}>
+            <TabSelector<'email' | 'phone'>
+              activeTab={registerMethod}
+              setActiveTab={setRegisterMethod}
+              options={[
+                { value: 'email', label: 'Đăng ký Email' },
+                { value: 'phone', label: 'Đăng ký SĐT' },
+              ]}
+            />
           </Animated.View>
 
           {/* Form Card */}
@@ -227,7 +224,7 @@ export default function RegisterScreen() {
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <ActivityIndicator color="#0c0f14" />
+                    <ActivityIndicator color="#ffffff" />
                   ) : (
                     <Text style={styles.primaryButtonText}>Đăng Ký Tài Khoản</Text>
                   )}
@@ -274,7 +271,7 @@ export default function RegisterScreen() {
                     disabled={isLoadingOtp}
                   >
                     {isLoadingOtp ? (
-                      <ActivityIndicator color="#0c0f14" />
+                      <ActivityIndicator color="#ffffff" />
                     ) : (
                       <Text style={styles.primaryButtonText}>Gửi Mã OTP</Text>
                     )}
@@ -286,7 +283,7 @@ export default function RegisterScreen() {
                     disabled={isLoading}
                   >
                     {isLoading ? (
-                      <ActivityIndicator color="#0c0f14" />
+                      <ActivityIndicator color="#ffffff" />
                     ) : (
                       <Text style={styles.primaryButtonText}>Xác Nhận & Đăng Ký</Text>
                     )}

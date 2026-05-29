@@ -1,52 +1,53 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { ThemeColors } from '@/shared/theme/colors';
 
 const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = (width - 48) / 2; // 2 columns grid
 
-export const styles = StyleSheet.create({
+export const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0f14',
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   filterContainer: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
+    borderBottomColor: colors.border,
   },
   filterScroll: {
     paddingHorizontal: 16,
   },
   filterChip: {
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
   },
   filterChipActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   filterChipText: {
-    color: '#aaa',
+    color: colors.textSecondary,
     fontWeight: '600',
     fontSize: 13,
   },
   filterChipTextActive: {
-    color: '#fff',
+    color: colors.textLight,
     fontWeight: 'bold',
   },
   gridContainer: {
@@ -55,11 +56,16 @@ export const styles = StyleSheet.create({
   gridItem: {
     width: COLUMN_WIDTH,
     margin: 8,
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: colors.background === '#0c0f14' ? 0.2 : 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   polaroidFrame: {
     position: 'relative',
@@ -87,7 +93,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   itemAmount: {
-    color: '#ff9f43',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: 'bold',
   },
@@ -96,12 +102,12 @@ export const styles = StyleSheet.create({
   },
   itemPlanName: {
     fontSize: 12,
-    color: '#fff',
+    color: colors.text,
     fontWeight: 'bold',
   },
   itemNote: {
     fontSize: 11,
-    color: '#888',
+    color: colors.textSecondary,
     marginTop: 4,
   },
   emptyContainer: {
@@ -109,16 +115,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 40,
+    paddingTop: 100,
   },
   emptyText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
     marginTop: 20,
   },
   emptySubText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 8,
     lineHeight: 20,
@@ -126,7 +133,7 @@ export const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.85)',
+    backgroundColor: colors.overlayDark,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -134,11 +141,16 @@ export const styles = StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     borderRadius: 24,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -155,7 +167,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   modalMetaText: {
-    color: '#ff9f43',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '600',
     marginLeft: 6,
@@ -167,7 +179,7 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
     marginBottom: 16,
   },
   modalPhoto: {
@@ -198,29 +210,29 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   modalPlanTitle: {
-    color: '#ff9f43',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },
   modalAmount: {
-    color: '#fff',
+    color: colors.text,
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 4,
   },
   notesContainer: {
     marginTop: 12,
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.inputBackground,
     borderRadius: 12,
     padding: 12,
   },
   notesLabel: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: '600',
   },
   modalNotes: {
-    color: '#fff',
+    color: colors.text,
     fontSize: 14,
     marginTop: 4,
   },

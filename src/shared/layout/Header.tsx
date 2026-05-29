@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ReactNode } from 'react';
-import { colors } from '../theme/colors';
+import { useTheme, useStyles } from '../theme/useTheme';
+import { ThemeColors } from '../theme/colors';
 
 interface HeaderProps {
   title?: string;
@@ -30,6 +31,8 @@ export default function Header({
   titleStyle,
   alignTitle,
 }: HeaderProps) {
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
   const isModal = type === 'modal';
 
   const defaultAlign = leftIcon || leftElement ? 'center' : 'left';
@@ -43,7 +46,7 @@ export default function Header({
       {showLeft ? (
         leftElement || (
           <TouchableOpacity style={styles.iconBtn} onPress={onLeftPress}>
-            <Ionicons name={leftIcon} size={24} color={colors.textLight} />
+            <Ionicons name={leftIcon} size={24} color={colors.text} />
           </TouchableOpacity>
         )
       ) : finalAlign === 'center' && showRight ? (
@@ -68,7 +71,7 @@ export default function Header({
             style={rightIcon === 'add' ? styles.addBtn : styles.iconBtn}
             onPress={onRightPress}
           >
-            <Ionicons name={rightIcon} size={24} color={colors.textLight} />
+            <Ionicons name={rightIcon} size={24} color={rightIcon === 'add' ? '#ffffff' : colors.text} />
           </TouchableOpacity>
         )
       ) : finalAlign === 'center' && showLeft ? (
@@ -78,7 +81,7 @@ export default function Header({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screenHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.textLight,
+    color: colors.text,
   },
   centerTitle: {
     textAlign: 'center',
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.textLight,
+    color: colors.text,
   },
   addBtn: {
     width: 40,

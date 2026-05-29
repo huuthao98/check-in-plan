@@ -5,6 +5,7 @@ import { store } from './src/store';
 import { hydratePlans } from './src/store/plansSlice';
 import { hydrateCheckIns } from './src/store/checkInsSlice';
 import { hydrateAuth } from './src/store/authSlice';
+import { hydrateTheme } from './src/store/themeSlice';
 import { setAuthToken } from './src/services/api';
 import AppNavigator from './src/navigation/AppNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -26,12 +27,16 @@ export default function App() {
         const storedCheckIns = await AsyncStorage.getItem(STORAGE_KEYS.CHECKINS);
         const storedToken = await AsyncStorage.getItem(STORAGE_KEYS.TOKEN);
         const storedUser = await AsyncStorage.getItem(STORAGE_KEYS.USER);
+        const storedTheme = await AsyncStorage.getItem(STORAGE_KEYS.THEME);
 
         if (storedPlans) {
           store.dispatch(hydratePlans(JSON.parse(storedPlans)));
         }
         if (storedCheckIns) {
           store.dispatch(hydrateCheckIns(JSON.parse(storedCheckIns)));
+        }
+        if (storedTheme) {
+          store.dispatch(hydrateTheme(storedTheme as any));
         }
         if (storedToken && storedUser) {
           setAuthToken(storedToken);
@@ -63,7 +68,6 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <StatusBar barStyle="light-content" backgroundColor="#0c0f14" />
         <AppNavigator />
       </SafeAreaProvider>
     </Provider>

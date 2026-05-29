@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,21 +8,26 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
+import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 
-import { authStart, authSuccess, authFailure, clearError } from '@/store/authSlice';
+import { createStyles } from './styles';
+import { useTheme, useStyles } from '@/shared/theme/useTheme';
+import { useAuth } from '@/hooks/useAuth';
+import { useAppDispatch } from '@/hooks/store';
 import { authAPI, setAuthToken } from '@/services/api';
 import { TextField, TextFieldPassword } from '@/shared/components/TextField';
-import { useAppDispatch } from '@/hooks/store';
-import { useAuth } from '@/hooks/useAuth';
-import { styles } from './styles';
+import { TabSelector } from '@/shared/components/TabSelector';
+import { authStart, authSuccess, authFailure, clearError } from '@/store/authSlice';
 
 export default function LoginScreen() {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAuth();
+  const { colors } = useTheme();
+  const styles = useStyles(createStyles);
 
   const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
 
@@ -132,28 +136,20 @@ export default function LoginScreen() {
             entering={FadeInUp.delay(100).duration(500)}
             style={styles.headerContainer}
           >
-            <Text style={styles.logoText}>Locket Plan</Text>
+            <Text style={styles.logoText}>Check My Plan</Text>
             <Text style={styles.subtext}>Quản lý chi tiêu & Kế hoạch cao cấp</Text>
           </Animated.View>
 
           {/* Tab Switcher */}
-          <Animated.View entering={FadeInUp.delay(200).duration(500)} style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[styles.tabButton, loginMethod === 'email' && styles.activeTabButton]}
-              onPress={() => setLoginMethod('email')}
-            >
-              <Text style={[styles.tabText, loginMethod === 'email' && styles.activeTabText]}>
-                Email
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tabButton, loginMethod === 'phone' && styles.activeTabButton]}
-              onPress={() => setLoginMethod('phone')}
-            >
-              <Text style={[styles.tabText, loginMethod === 'phone' && styles.activeTabText]}>
-                Số điện thoại
-              </Text>
-            </TouchableOpacity>
+          <Animated.View entering={FadeInUp.delay(200).duration(500)}>
+            <TabSelector<'email' | 'phone'>
+              activeTab={loginMethod}
+              setActiveTab={setLoginMethod}
+              options={[
+                { value: 'email', label: 'Email' },
+                { value: 'phone', label: 'Số điện thoại' },
+              ]}
+            />
           </Animated.View>
 
           {/* Form Card */}
@@ -192,7 +188,7 @@ export default function LoginScreen() {
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <ActivityIndicator color="#0c0f14" />
+                    <ActivityIndicator color="#ffffff" />
                   ) : (
                     <Text style={styles.primaryButtonText}>Đăng Nhập</Text>
                   )}
@@ -240,7 +236,7 @@ export default function LoginScreen() {
                     disabled={isLoadingOtp}
                   >
                     {isLoadingOtp ? (
-                      <ActivityIndicator color="#0c0f14" />
+                      <ActivityIndicator color="#ffffff" />
                     ) : (
                       <Text style={styles.primaryButtonText}>Gửi Mã OTP</Text>
                     )}
@@ -252,7 +248,7 @@ export default function LoginScreen() {
                     disabled={isLoading}
                   >
                     {isLoading ? (
-                      <ActivityIndicator color="#0c0f14" />
+                      <ActivityIndicator color="#ffffff" />
                     ) : (
                       <Text style={styles.primaryButtonText}>Xác Nhận & Đăng Nhập</Text>
                     )}

@@ -9,12 +9,10 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import Animated, {
-  withTiming,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated, { withTiming, useAnimatedStyle } from 'react-native-reanimated';
 import { Icon } from '../Icon';
-import { colors } from '../theme/colors';
+import { useTheme, useStyles } from '../theme/useTheme';
+import { ThemeColors } from '../theme/colors';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -43,12 +41,15 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
     },
     ref,
   ) => {
+    const { colors } = useTheme();
+    const styles = useStyles(createStyles);
+
     const innerRef = useRef<TextInput>(null);
     useImperativeHandle(ref, () => innerRef.current as TextInput);
-    
+
     const [isFocused, setIsFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    
+
     // Support both controlled and uncontrolled states
     const [localValue, setLocalValue] = useState(props.defaultValue || '');
     const displayValue = value !== undefined ? value : localValue;
@@ -93,10 +94,9 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
       return {
         top: withTiming(isActive ? -10 : 16, { duration: 150 }),
         fontSize: withTiming(isActive ? 12 : 16, { duration: 150 }),
-        color: withTiming(
-          isError ? colors.error : isFocused ? colors.info : colors.textMuted,
-          { duration: 150 }
-        ),
+        color: withTiming(isError ? colors.error : isFocused ? colors.info : colors.textMuted, {
+          duration: 150,
+        }),
       };
     });
 
@@ -104,7 +104,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
       return {
         borderColor: withTiming(
           isError ? colors.error : isFocused ? colors.info : colors.borderLight,
-          { duration: 150 }
+          { duration: 150 },
         ),
         borderWidth: withTiming(isFocused || isError ? 2 : 1, {
           duration: 150,
@@ -126,37 +126,26 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
             onBlur={handleBlur}
             onChangeText={handleChangeText}
             placeholder={isFocused ? placeholder : ''}
-            placeholderTextColor={colors.borderLight}
+            placeholderTextColor={colors.textMuted}
             secureTextEntry={isPassword && !showPassword}
             autoCapitalize={props.autoCapitalize ?? 'none'}
             {...props}
           />
           {isPassword ? (
             <Pressable
-              onPress={() => setShowPassword(prev => !prev)}
+              onPress={() => setShowPassword((prev) => !prev)}
               hitSlop={10}
               style={styles.rightButton}
             >
-              <Icon
-                name={!showPassword ? 'EyeOff' : 'Eye'}
-                size={16}
-                color={colors.borderLight}
-              />
+              <Icon name={!showPassword ? 'EyeOff' : 'Eye'} size={16} color={colors.textMuted} />
             </Pressable>
           ) : isFocused && hasValue ? (
-            <Pressable
-              onPress={handleClear}
-              hitSlop={10}
-              style={styles.rightButton}
-            >
-              <Icon name="X" size={16} color={colors.borderLight} />
+            <Pressable onPress={handleClear} hitSlop={10} style={styles.rightButton}>
+              <Icon name="X" size={16} color={colors.textMuted} />
             </Pressable>
           ) : null}
         </AnimatedPressable>
-        <Animated.Text
-          style={[styles.label, animatedLabelStyle]}
-          pointerEvents="none"
-        >
+        <Animated.Text style={[styles.label, animatedLabelStyle]} pointerEvents="none">
           {label}
         </Animated.Text>
         {(!!helperText || typeof error === 'string') && (
@@ -171,49 +160,49 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
 
 TextField.displayName = 'TextField';
 
-const styles = StyleSheet.create({
-  outerContainer: {
-    position: 'relative',
-    marginBottom: 16,
-  },
-  inputContainer: {
-    height: 56,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-  },
-  label: {
-    position: 'absolute',
-    left: 10,
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 4,
-    zIndex: 2,
-  },
-  input: {
-    flex: 1,
-    height: '100%',
-    fontSize: 16,
-    color: colors.textDark,
-    paddingVertical: 0, // Prevent clipping on Android
-  },
-  helperText: {
-    marginTop: 4,
-    marginLeft: 14,
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  errorText: {
-    color: colors.error,
-  },
-  rightButton: {
-    marginLeft: 8,
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    outerContainer: {
+      position: 'relative',
+      marginBottom: 16,
+    },
+    inputContainer: {
+      height: 56,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      // backgroundColor: colors.inputBackground,
+    },
+    label: {
+      position: 'absolute',
+      left: 10,
+      backgroundColor: colors.surface,
+      paddingHorizontal: 4,
+      zIndex: 2,
+    },
+    input: {
+      flex: 1,
+      height: '100%',
+      fontSize: 16,
+      color: colors.text,
+      paddingVertical: 0, // Prevent clipping on Android
+    },
+    helperText: {
+      marginTop: 4,
+      marginLeft: 14,
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    errorText: {
+      color: colors.error,
+    },
+    rightButton: {
+      marginLeft: 8,
+    },
+  });
 
-export const TextFieldPassword = forwardRef<
-  TextInput,
-  Omit<TextFieldProps, 'isPassword'>
->((props, ref) => <TextField ref={ref} isPassword {...props} />);
+export const TextFieldPassword = forwardRef<TextInput, Omit<TextFieldProps, 'isPassword'>>(
+  (props, ref) => <TextField ref={ref} isPassword {...props} />,
+);
 TextFieldPassword.displayName = 'TextFieldPassword';

@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { ThemeColors } from '@/shared/theme/colors';
 
-export const styles = StyleSheet.create({
+export const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0f14', // sleek dark theme background
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -12,18 +13,18 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e222b',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   addBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#ff9f43', // premium accent color
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -31,12 +32,17 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#2d323f',
+    borderColor: colors.borderDark,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: colors.background === '#0c0f14' ? 0.2 : 0.05,
+    shadowRadius: 6,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -47,11 +53,11 @@ export const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   cardSub: {
     fontSize: 12,
-    color: '#ff9f43',
+    color: colors.primary,
     marginTop: 4,
     fontWeight: '600',
   },
@@ -62,19 +68,19 @@ export const styles = StyleSheet.create({
   },
   spendingText: {
     fontSize: 13,
-    color: '#aaa',
+    color: colors.textSecondary,
   },
   spentAmount: {
-    color: '#ff4d4d',
+    color: colors.textRed,
     fontWeight: '700',
   },
   budgetAmount: {
-    color: '#fff',
+    color: colors.text,
     fontWeight: '700',
   },
   progressContainer: {
     height: 8,
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.borderLight,
     borderRadius: 4,
     overflow: 'hidden',
     marginBottom: 12,
@@ -95,29 +101,30 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 40,
+    paddingTop: 80,
   },
   emptyText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
     marginTop: 20,
   },
   emptySubText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 8,
     lineHeight: 20,
   },
   createFirstBtn: {
     marginTop: 30,
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     paddingHorizontal: 25,
     paddingVertical: 14,
     borderRadius: 25,
   },
   createFirstBtnText: {
-    color: '#fff',
+    color: colors.textLight,
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -125,10 +132,10 @@ export const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: colors.overlayDark,
   },
   modalContent: {
-    backgroundColor: '#1b1f28',
+    backgroundColor: colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
@@ -143,23 +150,23 @@ export const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: colors.text,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#aaa',
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.inputBackground,
     borderRadius: 12,
     padding: 14,
-    color: '#fff',
+    color: colors.text,
     fontSize: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#3a4051',
+    borderColor: colors.borderDark,
   },
   intervalGrid: {
     flexDirection: 'row',
@@ -169,41 +176,41 @@ export const styles = StyleSheet.create({
   },
   intervalChip: {
     width: '48%',
-    backgroundColor: '#2d323f',
+    backgroundColor: colors.inputBackground,
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#3a4051',
+    borderColor: colors.borderDark,
   },
   intervalChipActive: {
-    backgroundColor: '#ff9f43',
-    borderColor: '#ff9f43',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   intervalChipText: {
-    color: '#aaa',
+    color: colors.textSecondary,
     fontWeight: '600',
     fontSize: 14,
   },
   intervalChipTextActive: {
-    color: '#fff',
+    color: colors.textLight,
     fontWeight: 'bold',
   },
   submitBtn: {
-    backgroundColor: '#ff9f43',
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#ff9f43',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 5,
   },
   submitBtnText: {
-    color: '#fff',
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: 'bold',
   },

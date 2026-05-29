@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '@/shared/theme/colors';
+import { ThemeColors } from '@/shared/theme/colors';
 
-export const styles = StyleSheet.create({
+export const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 24,
-    paddingVertical: 40,
+    paddingTop: 64,
+    paddingBottom: 40,
   },
   headerContainer: {
     alignItems: 'center',
@@ -19,37 +20,13 @@ export const styles = StyleSheet.create({
   logoText: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: colors.textLight,
+    color: colors.text,
     letterSpacing: 1.5,
   },
   subtext: {
     fontSize: 14,
-    color: colors.textGrey,
+    color: colors.textSecondary,
     marginTop: 8,
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 4,
-    marginBottom: 24,
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  activeTabButton: {
-    backgroundColor: colors.primary,
-  },
-  tabText: {
-    color: colors.textGrey,
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  activeTabText: {
-    color: colors.background,
   },
   card: {
     backgroundColor: colors.surface,
@@ -57,7 +34,7 @@ export const styles = StyleSheet.create({
     padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: colors.background === '#0c0f14' ? 0.3 : 0.1,
     shadowRadius: 8,
     elevation: 5,
   },
@@ -88,7 +65,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   primaryButtonText: {
-    color: colors.background,
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -110,7 +87,7 @@ export const styles = StyleSheet.create({
     marginTop: 32,
   },
   footerText: {
-    color: colors.textGrey,
+    color: colors.textSecondary,
     fontSize: 14,
   },
   footerLinkText: {
