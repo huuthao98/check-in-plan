@@ -37,7 +37,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 15,
     height: 60,
   },
   logoText: {

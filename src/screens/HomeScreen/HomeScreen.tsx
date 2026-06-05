@@ -18,7 +18,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 import { RootState } from '@/store';
-import { addPendingCheckIn, skipCheckIn } from '@/store/checkInsSlice';
 import { CheckIn } from '@/shared/types';
 import { logout } from '@/store/authSlice';
 import { setAuthToken } from '@/services/api';
@@ -199,37 +198,38 @@ export default function HomeScreen({ navigation }: any) {
     <SafeAreaView style={styles.container}>
       {/* Top Bar with CheckIn Branding, Logout & Makeup Button */}
       <View style={styles.topBar}>
+        <Text style={styles.logoText}>CheckIn Plan</Text>
+
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={styles.logoText}>CheckIn Plan</Text>
-          <TouchableOpacity 
-            style={{ marginLeft: 15, padding: 5 }} 
+          {pendingCheckIns.length > 0 && (
+            <TouchableOpacity
+              style={styles.makeupBadgeBtn}
+              onPress={() => setMakeupModalVisible(true)}
+            >
+              <Ionicons name="alert-circle" size={20} color="#fff" />
+              <Text style={styles.makeupBadgeBtnText}>Chụp bù ({pendingCheckIns.length})</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            style={{ marginLeft: 15, padding: 5 }}
             onPress={() => {
               Alert.alert('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất không?', [
                 { text: 'Hủy', style: 'cancel' },
-                { 
-                  text: 'Đăng xuất', 
-                  style: 'destructive', 
+                {
+                  text: 'Đăng xuất',
+                  style: 'destructive',
                   onPress: () => {
                     dispatch(logout());
                     setAuthToken(null);
-                  } 
-                }
+                  },
+                },
               ]);
             }}
           >
             <Ionicons name="log-out-outline" size={22} color="#ff4d4d" />
           </TouchableOpacity>
         </View>
-
-        {pendingCheckIns.length > 0 && (
-          <TouchableOpacity
-            style={styles.makeupBadgeBtn}
-            onPress={() => setMakeupModalVisible(true)}
-          >
-            <Ionicons name="alert-circle" size={20} color="#fff" />
-            <Text style={styles.makeupBadgeBtnText}>Chụp bù ({pendingCheckIns.length})</Text>
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* Makeup Mode Active Indicator */}
